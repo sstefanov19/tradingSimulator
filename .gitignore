@@ -14,8 +14,7 @@ target/
 .sts4-cache
 
 #Spring boot
-application.properties
-application.yml
+src/main/resources/application.properties
 
 ### IntelliJ IDEA ###
 .idea
