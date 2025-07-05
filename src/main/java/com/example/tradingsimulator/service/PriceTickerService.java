@@ -16,6 +16,10 @@ public class PriceTickerService implements PriceService {
 
     @Override
     public PriceDto getPrice(String ticker) {
-        return alphaVantageClient.getPriceForTicker(ticker);
+        PriceDto priceDto = alphaVantageClient.getPriceForTicker(ticker);
+        if (priceDto == null || priceDto.getPrice() == null) {
+            throw new RuntimeException("No data found for ticker: " + ticker);
+        }
+        return priceDto;
     }
 }

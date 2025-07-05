@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.math.BigDecimal;
 
 @Data
 
@@ -33,8 +34,7 @@ public class RegisterRequest {
 
     private String password;
 
-
     private Role role;
 
-
+    private BigDecimal balance;
 }

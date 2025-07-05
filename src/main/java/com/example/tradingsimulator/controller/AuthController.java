@@ -7,7 +7,6 @@ import com.example.tradingsimulator.dto.RegisterRequest;
 import com.example.tradingsimulator.dto.TokenPair;
 import com.example.tradingsimulator.service.AuthService;
 import jakarta.validation.Valid;
-import org.antlr.v4.runtime.Token;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
