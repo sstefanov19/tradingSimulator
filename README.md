@@ -53,8 +53,11 @@ POST /api/v1/auth/register
 Content-Type: application/json
 
 {
+  "fullName: "fullName",
   "username": "newuser",
   "password": "securePassword123"
+  "balance" : "1000000",
+  "role" : "ROLE_USER"
 }
 ```
 
@@ -64,7 +67,7 @@ Content-Type: application/json
 
 {
   "username": "existinguser",
-  "password": "userPassword123"
+  "password": "userPassword123",
 }
 ```
 
@@ -83,6 +86,7 @@ Authorization: Bearer <JWT_TOKEN>
 Content-Type: application/json
 
 {
+  "userId" : "userId",
   "ticker": "AAPL",
   "orderType": "BUY",
   "quantity": 5
