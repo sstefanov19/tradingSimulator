@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 
 @NoArgsConstructor
@@ -16,7 +18,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 
-@Table(name = "application_user")
+@Table(name = "users")
 public class User {
 
     @Id
@@ -45,10 +47,14 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public User(String fullName, String username, String password, Role role) {
+    @Column(nullable = false)
+    private BigDecimal balance;
+
+    public User(String fullName, String username, String password, Role role ,  BigDecimal balance) {
         this.fullName = fullName;
         this.username = username;
         this.password = password;
         this.role = role;
+        this.balance = balance;
     }
 }

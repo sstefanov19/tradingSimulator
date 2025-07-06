@@ -1,8 +1,6 @@
-
 package com.example.tradingsimulator.service;
 
 import com.example.tradingsimulator.dto.PriceDto;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -13,7 +11,6 @@ import java.util.Map;
 
 @Service
 public class AlphaVantageClient {
-
 
     private final RestTemplate restTemplate;
     private final String apiKey;
@@ -33,6 +30,10 @@ public class AlphaVantageClient {
                 baseUrl, ticker, apiKey);
 
         Map<String, Object> response = restTemplate.getForObject(url, Map.class);
+
+        if (response == null) {
+            throw new RuntimeException("No data found for ticker: " + ticker);
+        }
 
         Map<String, String> globalQuote = (Map<String, String>) response.get("Global Quote");
         if (globalQuote == null || globalQuote.isEmpty()) {

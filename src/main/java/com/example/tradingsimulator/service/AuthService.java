@@ -41,6 +41,7 @@ public class AuthService {
                 .username(registerRequest.getUsername())
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .role(registerRequest.getRole())
+                .balance(registerRequest.getBalance())
                 .build();
 
         userRepository.save(user);
