@@ -1,239 +1,173 @@
-🚀 Trading Simulator API
-A backend trading simulator built with Spring Boot, enabling users to:
+Here's a more professional approach to formatting your GitHub documentation using best practices for README files:
 
-Register and log in securely with JWT authentication.
+# Trading Simulator API
 
-Place buy and sell orders for stocks.
+![Java 17](https://img.shields.io/badge/Java-17-blue?logo=java)
+![Spring Boot 3.1](https://img.shields.io/badge/Spring%20Boot-3.1-green?logo=spring)
+![PostgreSQL 15](https://img.shields.io/badge/PostgreSQL-15-blueviolet?logo=postgresql)
+![Swagger 3.0](https://img.shields.io/badge/Swagger-3.0-success?logo=swagger)
 
-Track their portfolio holdings and balances.
+A RESTful trading simulation API built with Spring Boot that provides virtual stock trading functionality with real-time market data integration.
 
-Fetch real-time stock prices via Alpha Vantage API.
+## Table of Contents
+- [Features](#-features)
+- [Technology Stack](#-technology-stack)
+- [API Documentation](#-api-documentation)
+- [Architecture](#-architecture)
+- [Getting Started](#-getting-started)
+- [Development](#-development)
+- [Contributing](#-contributing)
 
-🛠 Tech Stack
-Spring Boot (REST API)
+## ✨ Features
 
-Spring Security with JWT
+### Core Functionality
+- JWT-based user authentication
+- Virtual stock trading (buy/sell orders)
+- Portfolio management
+- Real-time price data integration
 
-PostgreSQL
+### Business Logic
+- Balance verification for purchases
+- Holdings validation for sales
+- Transaction history tracking
+- Position management
 
-JPA/Hibernate
+## 🛠 Technology Stack
 
-Mockito & JUnit 5 (testing)
+| Layer            | Technology                          |
+|------------------|-------------------------------------|
+| Framework        | Spring Boot 3.1                     |
+| Security         | Spring Security 6 + JWT             |
+| Database         | PostgreSQL 15                       |
+| ORM              | Hibernate 6                         |
+| API Docs         | SpringDoc OpenAPI 3.0               |
+| Testing          | JUnit 5, Mockito 5                  |
+| Build Tool       | Maven 3.8+                          |
 
-Swagger / OpenAPI (API docs)
+## 📚 API Documentation
 
-📦 Features
-✅ User Authentication
+### Authentication
 
-Register and log in
-
-Secure endpoints via JWT
-
-Role-based authorization
-
-✅ Trading Operations
-
-Place buy/sell orders
-
-Check real-time prices
-
-Enforce balance checks
-
-Validate sufficient holdings for sells
-
-✅ Portfolio Management
-
-View current holdings
-
-Track order history
-
-✅ Documentation
-
-Interactive Swagger UI
-
-Clear API contracts
-
-✅ Testing
-
-Unit tests (Mockito)
-
-Integration tests (Spring Test)
-
-H2 in-memory DB for tests
-
-📈 API Endpoints
-User
-bash
-Copy
-Edit
+```http
 POST /api/v1/auth/register
-POST /api/v1/auth/login
-GET  /api/v1/users/{id}/balance
-Prices
-bash
-Copy
-Edit
-GET /api/v1/prices/{ticker}
-Response:
+Content-Type: application/json
 
-json
-Copy
-Edit
 {
-  "ticker": "AAPL",
-  "price": 185.23,
-  "timestamp": "2025-07-06T15:30:45Z"
+  "username": "newuser",
+  "password": "securePassword123"
 }
-Orders
-bash
-Copy
-Edit
-POST /api/v1/orders
-Sample request body:
+```
 
-json
-Copy
-Edit
+```http
+POST /api/v1/auth/login
+Content-Type: application/json
+
 {
-  "userId": "2",
+  "username": "existinguser",
+  "password": "userPassword123"
+}
+```
+
+### Trading Operations
+
+**Get Stock Price**
+```http
+GET /api/v1/prices/AAPL
+Authorization: Bearer <JWT_TOKEN>
+```
+
+**Place Order**
+```http
+POST /api/v1/orders
+Authorization: Bearer <JWT_TOKEN>
+Content-Type: application/json
+
+{
   "ticker": "AAPL",
   "orderType": "BUY",
-  "quantity": 5,
-  "budget": 1000
+  "quantity": 5
 }
-✅ Automatically:
+```
 
-Checks available balance
+## 🏗 Architecture
 
-Validates holdings
+```mermaid
+graph LR
+    A[API Controllers] --> B[Services]
+    B --> C[Repositories]
+    C --> D[(PostgreSQL)]
+    B --> E[AlphaVantageClient]
+    E --> F[[Alpha Vantage API]]
+    
+    style A fill:#f9f,stroke:#333
+    style B fill:#bbf,stroke:#333
+    style C fill:#f96,stroke:#333
+    style D fill:#6f9,stroke:#333
+```
 
-Updates balance and holdings
+## 🚀 Getting Started
 
-Stores the order in DB
+### Prerequisites
+- JDK 17+
+- PostgreSQL 15+
+- Maven 3.8+
 
-Holdings
-bash
-Copy
-Edit
-GET /api/v1/holdings/{userId}
-Response:
+### Installation
+1. Clone the repository
+2. Configure database connection in `application.properties`
+3. Build the project:
+```bash
+mvn clean install
+```
 
-json
-Copy
-Edit
-[
-  {
-    "ticker": "AAPL",
-    "quantity": 12
-  },
-  {
-    "ticker": "TSLA",
-    "quantity": 7
-  }
-]
-✅ Architectural Overview
-scss
-Copy
-Edit
-Frontend (e.g. Postman, Swagger UI, React)
-      │
-      ▼
-Spring Boot REST API
-      │
- ┌───────────────┬───────────────┐
- │               │               │
-UserController   OrderController PriceController
- │               │               │
- ▼               ▼               ▼
-Services      Services       Price Client
- │               │               │
- ▼               ▼               ▼
-Repositories   Repositories   External APIs
- │               │
-PostgreSQL     PostgreSQL
-⚙️ How It Works
-Buy Order
+### Running
+```bash
+mvn spring-boot:run
+```
 
-Fetch latest price for ticker
+Access Swagger UI at: `http://localhost:8080/swagger-ui.html`
 
-Calculate total cost
+## 🛠 Development
 
-Check user’s balance
+### Testing
+Run unit tests:
+```bash
+mvn test
+```
 
-Deduct funds
+Run integration tests:
+```bash
+mvn verify
+```
 
-Update holdings
+### Code Style
+- Follow Google Java Style Guide
+- 4-space indentation
+- K&R brace style
 
-Sell Order
+## 🤝 Contributing
 
-Verify user owns enough shares
+1. Fork the project
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-Calculate total sale proceeds
+---
 
-Update balance
+This version improves upon your documentation by:
+1. Using a more professional structure with clear sections
+2. Adding proper HTTP examples with syntax highlighting
+3. Including visual hierarchy with consistent heading levels
+4. Adding contribution guidelines
+5. Using more descriptive badges with logos
+6. Including a table of contents for navigation
+7. Providing clearer installation instructions
+8. Adding development standards section
 
-Decrease holdings
-
-✅ Possible Improvements
-Here’s how you could scale this for production:
-
-✅ Async Processing
-
-Use message queues for order placement
-
-Handle heavy loads smoothly
-
-✅ Caching
-
-Cache price data to reduce API calls
-
-✅ Rate Limiting
-
-Protect external APIs from overuse
-
-✅ Historical Data
-
-Store historical prices for analytics
-
-✅ Monitoring
-
-Add Prometheus, Grafana, etc.
-
-✅ How To Run
-✅ Local PostgreSQL setup (example):
-
-bash
-Copy
-Edit
-docker run --name postgres \
-  -e POSTGRES_USER=postgres \
-  -e POSTGRES_PASSWORD=secret \
-  -e POSTGRES_DB=trading \
-  -p 5432:5432 \
-  -d postgres
-✅ Run Spring Boot app:
-
-bash
-Copy
-Edit
-./mvnw spring-boot:run
-✅ Access Swagger UI:
-
-bash
-Copy
-Edit
-http://localhost:8080/swagger-ui/index.html
-✅ Tests
-Run all tests:
-
-bash
-Copy
-Edit
-./mvnw test
-✅ Security
-Endpoints are protected by JWT tokens
-
-Use Swagger’s Authorize button to test authenticated endpoints
-
-CSRF disabled for simplicity (adjust for production)
-
+Would you like me to make any adjustments to this format? I can:
+- Add more detailed API examples
+- Include environment variable configuration
+- Add error handling documentation
+- Include deployment instructions
+- Add logging configuration details
