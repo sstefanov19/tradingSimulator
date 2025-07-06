@@ -53,7 +53,7 @@ POST /api/v1/auth/register
 Content-Type: application/json
 
 {
-  "fullName: "fullName",
+  "fullName": "fullName",
   "username": "newuser",
   "password": "securePassword123"
   "balance" : "1000000",
