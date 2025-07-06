@@ -35,12 +35,14 @@ public class UserService{
         userRepository.save(user);
     }
 
-    public void increaseBalance(String userId, BigDecimal amount) {
+    public BigDecimal increaseBalance(String userId, BigDecimal amount) {
         User user = userRepository.findById(Long.parseLong(userId))
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        user.setBalance(user.getBalance().add(amount));
+        BigDecimal newBalance = user.getBalance().add(amount);
+        user.setBalance(newBalance);
         userRepository.save(user);
+        return newBalance;
     }
 
 }
