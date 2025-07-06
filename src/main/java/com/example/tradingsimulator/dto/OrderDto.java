@@ -10,7 +10,6 @@ public class OrderDto {
     private String userId;
     private String ticker;
     private BigDecimal quantity;
-    private BigDecimal executedPrice;
     private OrderType orderType;
     private String executionType;
     private String status;
@@ -21,8 +20,7 @@ public class OrderDto {
     public OrderDto(Long orderId,
                     String userId,
                     String ticker,
-//                    BigDecimal quantity,
-                    BigDecimal executedPrice,
+                    BigDecimal quantity,
                     OrderType orderType,
                     String executionType,
                     String status,
@@ -30,8 +28,7 @@ public class OrderDto {
         this.orderId = orderId;
         this.userId = userId;
         this.ticker = ticker;
-//        this.quantity = quantity;
-        this.executedPrice = executedPrice;
+        this.quantity = quantity;
         this.orderType = orderType;
         this.executionType = executionType;
         this.status = status;
@@ -61,21 +58,13 @@ public class OrderDto {
     public void setTicker(String ticker) {
         this.ticker = ticker;
     }
-//
-//    public BigDecimal getQuantity() {
-//        return quantity;
-//    }
-//
-//    public void setQuantity(BigDecimal quantity) {
-//        this.quantity = quantity;
-//    }
 
-    public BigDecimal getExecutedPrice() {
-        return executedPrice;
+    public BigDecimal getQuantity() {
+        return quantity;
     }
 
-    public void setExecutedPrice(BigDecimal executedPrice) {
-        this.executedPrice = executedPrice;
+    public void setQuantity(BigDecimal quantity) {
+        this.quantity = quantity;
     }
 
     public OrderType getOrderType() {

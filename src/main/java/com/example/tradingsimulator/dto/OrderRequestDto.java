@@ -7,12 +7,19 @@ import java.math.BigDecimal;
 public class OrderRequestDto {
     private String userId;
     private String ticker;
+    private BigDecimal quantity;
     private OrderType orderType;
 
 
     public String getUserId() {
         return userId;
     }
+
+    public BigDecimal getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(BigDecimal quantity) {this.quantity = quantity;}
 
     public void setUserId(String userId) {
         this.userId = userId;

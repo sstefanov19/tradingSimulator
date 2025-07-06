@@ -23,7 +23,7 @@ public class PriceController {
     @GetMapping("/prices/{ticker}")
     public ResponseEntity<PriceDto> getPrice(@PathVariable String ticker) {
 
-        PriceDto price = priceTickerService.getPrice(ticker);
+       PriceDto price = priceTickerService.getPrice(ticker);
         return  ResponseEntity.ok(price);
     }
 

@@ -37,8 +37,8 @@ public class OrderController {
         OrderDto order = orderService.placeOrder(
                 request.getUserId(),
                 request.getTicker(),
+                request.getQuantity(),
                 request.getOrderType(),
-                price,
                 price
         );
         return ResponseEntity.ok(order);

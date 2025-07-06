@@ -16,9 +16,7 @@ public class Order {
 
     private String ticker;
 
-//    private BigDecimal quantity;
-
-    private BigDecimal executedPrice;
+    private BigDecimal quantity;
 
     private BigDecimal totalCost;
 
@@ -34,11 +32,9 @@ public class Order {
 
     public Order() {}
 
-
     public Order(String userId,
                  String ticker,
-//                 BigDecimal quantity,
-                 BigDecimal executedPrice,
+                 BigDecimal quantity,
                  BigDecimal totalCost,
                  OrderType orderType,
                  String executionType,
@@ -46,8 +42,7 @@ public class Order {
                  Instant timestamp) {
         this.userId = userId;
         this.ticker = ticker;
-//        this.quantity = quantity;
-        this.executedPrice = executedPrice;
+        this.quantity = quantity;
         this.totalCost = totalCost;
         this.orderType = orderType;
         this.executionType = executionType;
@@ -79,20 +74,12 @@ public class Order {
         this.ticker = ticker;
     }
 
-//    public BigDecimal getQuantity() {
-//        return quantity;
-//    }
-//
-//    public void setQuantity(BigDecimal quantity) {
-//        this.quantity = quantity;
-//    }
-
-    public BigDecimal getExecutedPrice() {
-        return executedPrice;
+    public BigDecimal getQuantity() {
+        return quantity;
     }
 
-    public void setExecutedPrice(BigDecimal executedPrice) {
-        this.executedPrice = executedPrice;
+    public void setQuantity(BigDecimal quantity) {
+        this.quantity = quantity;
     }
 
     public BigDecimal getTotalCost() {
