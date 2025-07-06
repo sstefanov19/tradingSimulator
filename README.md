@@ -98,11 +98,6 @@ graph LR
     C --> D[(PostgreSQL)]
     B --> E[AlphaVantageClient]
     E --> F[[Alpha Vantage API]]
-    
-    style A fill:#f9f,stroke:#333
-    style B fill:#bbf,stroke:#333
-    style C fill:#f96,stroke:#333
-    style D fill:#6f9,stroke:#333
 ```
 
 ## 🚀 Getting Started
