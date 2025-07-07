@@ -32,13 +32,14 @@ public class OrderController {
     @PostMapping("/orders")
     public ResponseEntity<OrderDto> placeOrder(@RequestBody OrderRequestDto request) {
         PriceDto priceDto = priceService.getPrice(request.getTicker());
+        BigDecimal totalPrice = priceDto.getPrice().multiply(request.getQuantity());
 
         OrderDto order = orderService.placeOrder(
                 request.getUserId(),
                 request.getTicker(),
                 request.getQuantity(),
                 request.getOrderType(),
-                priceDto.getPrice()
+                totalPrice
         );
         return ResponseEntity.ok(order);
     }

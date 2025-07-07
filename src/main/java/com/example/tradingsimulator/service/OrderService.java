@@ -39,7 +39,7 @@ public class OrderService {
                 throw new RuntimeException("Insufficient balance!");
             }
 
-            userService.decreaseBalance(userId, userBalance.subtract(totalCost));
+            userService.decreaseBalance(userId, totalCost);
 
             Holding holding = holdingRepository
                     .findByUserIdAndTicker(Long.parseLong(userId), ticker)
@@ -51,9 +51,7 @@ public class OrderService {
 
 
         if(orderType.equals(OrderType.SELL)){
-            BigDecimal userBalance = userService.getBalance(userId);
-
-            userService.increaseBalance(userId, userBalance.add(totalCost));
+            userService.increaseBalance(userId, totalCost);
 
             Holding holding = holdingRepository
                     .findByUserIdAndTicker(Long.parseLong(userId), ticker)
