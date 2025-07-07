@@ -1,11 +1,15 @@
 package com.example.tradingsimulator.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 
 @Entity
 @Table(name= "holdings")
+@Getter
+@Setter
 public class Holding {
 
     @Id
@@ -23,38 +27,6 @@ public class Holding {
     public Holding(Long userId, String ticker, BigDecimal quantity) {
         this.userId = userId;
         this.ticker = ticker;
-        this.quantity = quantity;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public String getTicker() {
-        return ticker;
-    }
-
-    public void setTicker(String ticker) {
-        this.ticker = ticker;
-    }
-
-    public BigDecimal getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(BigDecimal quantity) {
         this.quantity = quantity;
     }
 }
