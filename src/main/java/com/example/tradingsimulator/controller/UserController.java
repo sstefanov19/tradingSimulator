@@ -22,7 +22,6 @@ public class UserController {
     @GetMapping("/balance/{userId}")
     public ResponseEntity<BigDecimal> getBalance(@PathVariable String userId) {
         BigDecimal balance = userService.getBalance(userId);
-
         return ResponseEntity.ok(balance);
     }
 

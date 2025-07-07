@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("/api/v1")
 public class HoldingController {
 
-    private HoldingRepository holdingRepository;
+    private final HoldingRepository holdingRepository;
 
     public HoldingController(HoldingRepository holdingRepository) {
         this.holdingRepository = holdingRepository;
