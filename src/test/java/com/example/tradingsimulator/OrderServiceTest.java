@@ -38,7 +38,7 @@ public class OrderServiceTest {
         BigDecimal price = new BigDecimal("1.00");
         BigDecimal quantity = new BigDecimal("1.00");
         BigDecimal totalCost = price.multiply(quantity);
-        BigDecimal balance = new BigDecimal("1000.00");
+        BigDecimal balance = new BigDecimal("1000000.00");
 
         when(userService.getBalance(userId))
                 .thenReturn(balance);
@@ -60,7 +60,7 @@ public class OrderServiceTest {
         );
 
         assertEquals(userId , result.getUserId());
-        verify(userService).decreaseBalance(userId , balance.subtract(totalCost));
+        verify(userService).decreaseBalance(userId , totalCost);
         verify(holdingRepository).save(any(Holding.class));
         verify(orderRepository).save(any(Order.class));
     }
