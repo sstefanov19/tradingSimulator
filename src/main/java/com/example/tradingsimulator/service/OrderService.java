@@ -4,6 +4,7 @@ import com.example.tradingsimulator.dto.OrderDto;
 import com.example.tradingsimulator.model.Holding;
 import com.example.tradingsimulator.model.Order;
 import com.example.tradingsimulator.model.OrderType;
+import com.example.tradingsimulator.model.User;
 import com.example.tradingsimulator.repository.HoldingRepository;
 import com.example.tradingsimulator.repository.OrderRepository;
 import org.springframework.stereotype.Service;
@@ -56,6 +57,10 @@ public class OrderService {
             Holding holding = holdingRepository
                     .findByUserIdAndTicker(Long.parseLong(userId), ticker)
                     .orElse(new Holding(Long.parseLong(userId), ticker, BigDecimal.ZERO));
+
+            if(quantity.compareTo(holding.getQuantity()) > 0) {
+                throw new RuntimeException("Insufficient quantity!");
+            }
 
             holding.setQuantity(holding.getQuantity().subtract(quantity));
             holdingRepository.save(holding);
