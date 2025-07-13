@@ -27,10 +27,10 @@ public class User {
 
 
     @Column(
-            name = "full_name",
+            name = "email",
             nullable = false
     )
-    private String fullName;
+    private String email;
 
 
 
@@ -50,8 +50,8 @@ public class User {
 
     private BigDecimal balance;
 
-    public User(String fullName, String username, String password, Role role )  {
-        this.fullName = fullName;
+    public User(String email, String username, String password, Role role )  {
+        this.email = email;
         this.username = username;
         this.password = password;
         this.role = role;

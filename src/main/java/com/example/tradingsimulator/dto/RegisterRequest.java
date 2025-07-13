@@ -1,6 +1,7 @@
 package com.example.tradingsimulator.dto;
 
 import com.example.tradingsimulator.model.Role;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -18,10 +19,10 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class RegisterRequest {
 
-    @NotBlank(message = "Full name is required")
-    @Size(min = 3, max = 10, message = "Full name must be between 3 and 50 characters")
-
-    private String fullName;
+    @NotBlank(message = "Email is required")
+    @Size(min = 3,  message = "Full name must be between 3 and 50 characters")
+    @Email(message = "Invalid email format")
+    private String email;
 
 
     @NotBlank(message = "Username is required")
