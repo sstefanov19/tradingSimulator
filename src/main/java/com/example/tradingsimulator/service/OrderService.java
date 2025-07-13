@@ -63,7 +63,12 @@ public class OrderService {
             }
 
             holding.setQuantity(holding.getQuantity().subtract(quantity));
+
+            if(holding.getQuantity().compareTo(BigDecimal.ZERO) == 0) {
+                holdingRepository.delete(holding);
+            }else {
             holdingRepository.save(holding);
+            }
         }
 
         Order order = new Order(

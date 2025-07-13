@@ -47,14 +47,13 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Column(nullable = false)
+
     private BigDecimal balance;
 
-    public User(String fullName, String username, String password, Role role ,  BigDecimal balance) {
+    public User(String fullName, String username, String password, Role role )  {
         this.fullName = fullName;
         this.username = username;
         this.password = password;
         this.role = role;
-        this.balance = balance;
     }
 }

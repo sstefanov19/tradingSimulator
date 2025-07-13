@@ -36,5 +36,4 @@ public class RegisterRequest {
 
     private Role role;
 
-    private BigDecimal balance;
 }

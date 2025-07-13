@@ -19,6 +19,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 @Service
 @AllArgsConstructor
 public class AuthService {
@@ -41,7 +43,7 @@ public class AuthService {
                 .username(registerRequest.getUsername())
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .role(registerRequest.getRole())
-                .balance(registerRequest.getBalance())
+                .balance(BigDecimal.ZERO)
                 .build();
 
         userRepository.save(user);
