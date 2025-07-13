@@ -4,9 +4,9 @@ import com.example.tradingsimulator.dto.OrderDto;
 import com.example.tradingsimulator.model.Holding;
 import com.example.tradingsimulator.model.Order;
 import com.example.tradingsimulator.model.OrderType;
-import com.example.tradingsimulator.model.User;
 import com.example.tradingsimulator.repository.HoldingRepository;
 import com.example.tradingsimulator.repository.OrderRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -17,14 +17,18 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final HoldingRepository holdingRepository;
+    @Autowired
+    private final EmailSenderService emailSenderService;
     private final UserService userService;
 
     public OrderService(OrderRepository orderRepository,
                         UserService userService ,
-                        HoldingRepository holdingRepository) {
+                        HoldingRepository holdingRepository,
+                        EmailSenderService emailSenderService) {
         this.orderRepository = orderRepository;
         this.userService = userService;
         this.holdingRepository = holdingRepository;
+        this.emailSenderService = emailSenderService;
     }
 
     public OrderDto placeOrder(String userId,
@@ -48,6 +52,10 @@ public class OrderService {
 
             holding.setQuantity(holding.getQuantity().add(quantity));
             holdingRepository.save(holding);
+
+            String emailBody = "You have successfully bought " + quantity + " shares of " + ticker +
+                    " for a total cost of $" + totalCost + ". Your new balance is: $" + userService.getBalance(userId);
+            emailSenderService.sendEmail(userService.findEmail(userId), "Order Confirmation", emailBody);
         }
 
 

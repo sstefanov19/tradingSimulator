@@ -44,4 +44,11 @@ public class UserService{
         userRepository.save(user);
         return newBalance;
     }
+
+    public String findEmail(String userId) {
+        User user = userRepository.findById(Long.parseLong(userId))
+                .orElseThrow(() -> new RuntimeException("User not found!"));
+
+        return user.getEmail();
+    }
 }
