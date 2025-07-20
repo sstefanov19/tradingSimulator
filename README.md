@@ -1,5 +1,3 @@
-Here's a more professional approach to formatting your GitHub documentation using best practices for README files:
-
 # Trading Simulator API
 
 ![Java 17](https://img.shields.io/badge/Java-17-blue?logo=java)
