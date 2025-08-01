@@ -45,8 +45,7 @@ public class AlphaVantageClient {
 
         return new PriceDto(
                 ticker,
-                price,
-                Instant.now()
+                price
         );
     }
 }

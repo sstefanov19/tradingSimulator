@@ -1,6 +1,8 @@
 package com.example.tradingsimulator.service;
 
 import com.example.tradingsimulator.dto.PriceDto;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 
@@ -15,6 +17,7 @@ public class PriceTickerService implements PriceService {
     }
 
     @Override
+    @Cacheable(value = "PRICE_CACHE" , key = "#ticker")
     public PriceDto getPrice(String ticker) {
         PriceDto priceDto = alphaVantageClient.getPriceForTicker(ticker);
         if (priceDto == null || priceDto.getPrice() == null) {

@@ -16,5 +16,4 @@ public class Price {
     private Long id;
     private String ticker;
     private String price;
-    private Instant timestamp;
 }
