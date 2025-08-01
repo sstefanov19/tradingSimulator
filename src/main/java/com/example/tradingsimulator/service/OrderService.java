@@ -6,7 +6,6 @@ import com.example.tradingsimulator.model.Order;
 import com.example.tradingsimulator.model.OrderType;
 import com.example.tradingsimulator.repository.HoldingRepository;
 import com.example.tradingsimulator.repository.OrderRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -17,7 +16,6 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final HoldingRepository holdingRepository;
-    @Autowired
     private final EmailSenderService emailSenderService;
     private final UserService userService;
 
