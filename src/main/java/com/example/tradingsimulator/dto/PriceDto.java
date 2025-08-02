@@ -1,6 +1,7 @@
 package com.example.tradingsimulator.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,5 +19,6 @@ public class PriceDto {
     private String ticker;
 
     @NotNull
+    @Column(precision = 19, scale = 4)
     private BigDecimal price;
 }

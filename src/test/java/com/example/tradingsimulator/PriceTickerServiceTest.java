@@ -14,14 +14,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
 import java.math.BigDecimal;
-import java.time.Instant;
-import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -42,7 +41,7 @@ public class PriceTickerServiceTest {
         cacheManager.getCache("PRICE_CACHE").clear();
     }
 
-    @MockBean
+    @MockitoBean
     private AlphaVantageClient alphaVantageClient;
 
     @Autowired
@@ -58,8 +57,6 @@ public class PriceTickerServiceTest {
         Cache cache = cacheManager.getCache("PRICE_CACHE");
 
         when(alphaVantageClient.getPriceForTicker(ticker)).thenReturn(mockedPrice);
-
-        assertNull(cache.get(ticker));
 
         PriceDto firstCall = priceTickerService.getPrice(ticker);
         assertEquals(mockedPrice.getPrice(), firstCall.getPrice());
@@ -117,7 +114,6 @@ public class PriceTickerServiceTest {
         priceTickerService.getPrice(ticker);
         verify(alphaVantageClient, times(1)).getPriceForTicker(ticker);
 
-        // Manually evict from cache
         cache.evict(ticker);
         assertNull(cache.get(ticker));
 

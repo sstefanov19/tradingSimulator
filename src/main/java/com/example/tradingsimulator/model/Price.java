@@ -1,9 +1,11 @@
 package com.example.tradingsimulator.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 
 @Entity
@@ -15,5 +17,14 @@ public class Price {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String ticker;
-    private String price;
+    @Column(precision = 19, scale = 4)
+    private BigDecimal price;
+
+    public Price() {}
+
+    public Price(@NotBlank String ticker , BigDecimal price) {
+        this.ticker = ticker;
+        this.price = price;
+    }
+
 }
