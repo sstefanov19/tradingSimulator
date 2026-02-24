@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-public class PriceTickerService implements PriceService {
+public class PriceTickerService {
 
 
     private final AlphaVantageClient alphaVantageClient;
@@ -17,12 +17,12 @@ public class PriceTickerService implements PriceService {
         this.tickerTracker  = tickerTracker;
     }
 
-    @Override
+
     @Cacheable(value = "CACHE_PRICE" , key = "#ticker")
     public PriceDto getPrice(String ticker) {
         tickerTracker.markRequest(ticker);
         PriceDto priceDto = alphaVantageClient.getPriceForTicker(ticker);
-        if (priceDto == null || priceDto.getPrice() == null) {
+        if (priceDto == null || priceDto.price() == null) {
             throw new RuntimeException("No data found for ticker: " + ticker);
         }
         return priceDto;

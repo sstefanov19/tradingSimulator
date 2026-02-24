@@ -1,10 +1,10 @@
 package com.example.tradingsimulator.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.validation.constraints.Positive;
 
 import java.math.BigDecimal;
 
-@Getter
-@Setter
-public class DepositRequestDto { private BigDecimal amount;}
+public record DepositRequestDto(
+        Long userId,
+        @Positive(message = "Amount cannot be negative")  BigDecimal amount
+) {}

@@ -15,15 +15,15 @@ public class UserService{
         this.userRepository = userRepository;
     }
 
-    public BigDecimal getBalance(String userId) {
-        User user = userRepository.findById(Long.parseLong(userId))
+    public BigDecimal getBalance(Long userId) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found!"));
 
         return user.getBalance();
     }
 
-    public void decreaseBalance(String userId , BigDecimal amount) {
-        User user = userRepository.findById(Long.parseLong(userId))
+    public void decreaseBalance(Long userId , BigDecimal amount) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found!"));
 
         BigDecimal newBalance = user.getBalance().subtract(amount);
@@ -35,8 +35,8 @@ public class UserService{
         userRepository.save(user);
     }
 
-    public BigDecimal increaseBalance(String userId, BigDecimal amount) {
-        User user = userRepository.findById(Long.parseLong(userId))
+    public BigDecimal increaseBalance(Long userId, BigDecimal amount) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         BigDecimal newBalance = user.getBalance().add(amount);
@@ -45,8 +45,8 @@ public class UserService{
         return newBalance;
     }
 
-    public String findEmail(String userId) {
-        User user = userRepository.findById(Long.parseLong(userId))
+    public String findEmail(Long userId) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found!"));
 
         return user.getEmail();

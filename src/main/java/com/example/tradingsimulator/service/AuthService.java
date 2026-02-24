@@ -35,15 +35,15 @@ public class AuthService {
 
     @Transactional
     public void registerUser(RegisterRequest registerRequest) {
-        if(userRepository.existsByUsername(registerRequest.getUsername())) {
+        if(userRepository.existsByUsername(registerRequest.username())) {
             throw new IllegalArgumentException("User already exists!");
         }
 
         User user = User.builder()
-                .email(registerRequest.getEmail())
-                .username(registerRequest.getUsername())
-                .password(passwordEncoder.encode(registerRequest.getPassword()))
-                .role(registerRequest.getRole())
+                .email(registerRequest.email())
+                .username(registerRequest.username())
+                .password(passwordEncoder.encode(registerRequest.password()))
+                .role(registerRequest.role())
                 .balance(BigDecimal.ZERO)
                 .build();
 
@@ -58,8 +58,8 @@ public class AuthService {
         // Authenticate
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        loginRequest.getUsername(),
-                        loginRequest.getPassword()
+                        loginRequest.username(),
+                        loginRequest.password()
                 )
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -69,7 +69,7 @@ public class AuthService {
     }
 
     public TokenPair refreshToken(@Valid RefreshTokenRequest request) {
-       String refreshToken = request.getRefreshToken();
+       String refreshToken = request.refreshToken();
 
         if(!jwtService.isRefreshToken(refreshToken)){
             throw new IllegalArgumentException("Invalid refresh token!");

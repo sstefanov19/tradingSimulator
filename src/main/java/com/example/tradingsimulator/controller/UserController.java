@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 
 @RestController
-@RequestMapping("api/v1")
+@RequestMapping("api/v1/balance")
 public class UserController {
 
 
@@ -19,17 +19,15 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/balance/{userId}")
-    public ResponseEntity<BigDecimal> getBalance(@PathVariable String userId) {
+    @GetMapping("/{userId}")
+    public ResponseEntity<BigDecimal> getBalance(@PathVariable Long userId) {
         BigDecimal balance = userService.getBalance(userId);
         return ResponseEntity.ok(balance);
     }
 
-    @PostMapping("/deposit/{userId}")
-    public ResponseEntity<BigDecimal> deposit(@PathVariable String userId ,
-                                              @RequestBody DepositRequestDto depositRequest) {
-        BigDecimal amount = depositRequest.getAmount();
-        BigDecimal newBalance = userService.increaseBalance(userId , amount);
+    @PostMapping("/deposit")
+        public ResponseEntity<BigDecimal> deposit(@RequestBody DepositRequestDto depositRequest) {
+        BigDecimal newBalance = userService.increaseBalance(depositRequest.userId() , depositRequest.amount());
 
         return ResponseEntity.ok(newBalance);
     }

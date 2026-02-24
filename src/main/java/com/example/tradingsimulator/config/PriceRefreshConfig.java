@@ -24,8 +24,8 @@ public class PriceRefreshConfig {
         for(String ticker : tickerTracker.getRequestedTickers()) {
             try{
                 PriceDto price = alphaVantageClient.getPriceForTicker(ticker);
-                if(price != null && price.getPrice() != null) {
-                    redisTemplate.opsForValue().set("CACHE_PRICE::" +ticker , price.getPrice().toString());
+                if(price != null && price.price() != null) {
+                    redisTemplate.opsForValue().set("CACHE_PRICE::" +ticker , price.price().toString());
                 }
             }catch (Exception e) {
                 throw new RuntimeException(e.getMessage());

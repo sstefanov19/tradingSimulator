@@ -1,8 +1,8 @@
 # Trading Simulator API
 
-![Java 17](https://img.shields.io/badge/Java-17-blue?logo=java)
-![Spring Boot 3.1](https://img.shields.io/badge/Spring%20Boot-3.1-green?logo=spring)
-![PostgreSQL 15](https://img.shields.io/badge/PostgreSQL-15-blueviolet?logo=postgresql)
+![Java 21](https://img.shields.io/badge/Java-17-blue?logo=java)
+![Spring Boot 4.0](https://img.shields.io/badge/Spring%20Boot-3.1-green?logo=spring)
+![PostgreSQL 16](https://img.shields.io/badge/PostgreSQL-15-blueviolet?logo=postgresql)
 ![Swagger 3.0](https://img.shields.io/badge/Swagger-3.0-success?logo=swagger)
 
 A RESTful trading simulation API built with Spring Boot that provides virtual stock trading functionality with real-time market data integration.
@@ -32,15 +32,15 @@ A RESTful trading simulation API built with Spring Boot that provides virtual st
 
 ## 🛠 Technology Stack
 
-| Layer            | Technology                          |
-|------------------|-------------------------------------|
-| Framework        | Spring Boot 3.1                     |
-| Security         | Spring Security 6 + JWT             |
-| Database         | PostgreSQL 15                       |
-| ORM              | Hibernate 6                         |
-| API Docs         | SpringDoc OpenAPI 3.0               |
-| Testing          | JUnit 5, Mockito 5                  |
-| Build Tool       | Maven 3.8+                          |
+| Layer      | Technology             |
+|------------|------------------------|
+| Framework  | Spring Boot 4.0        |
+| Security   | Spring Security  + JWT |
+| Database   | PostgreSQL 16          |
+| ORM        | Hibernate              |
+| API Docs   | SpringDoc OpenAPI 3.0  |
+| Testing    | JUnit, Mockito         |
+| Build Tool | Maven                  |
 
 ## 📚 API Documentation
 
@@ -105,9 +105,9 @@ graph LR
 ## 🚀 Getting Started
 
 ### Prerequisites
-- JDK 17+
-- PostgreSQL 15+
-- Maven 3.8+
+- JDK 21+
+- PostgreSQL 16+
+- Maven 
 
 ### Installation
 1. Clone the repository

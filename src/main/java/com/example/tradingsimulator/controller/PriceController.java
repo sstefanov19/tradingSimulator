@@ -21,7 +21,7 @@ public class PriceController {
     public ResponseEntity<PriceDto> getPrice(@PathVariable String ticker) {
 
        PriceDto price = priceTickerService.getPrice(ticker);
-        return  ResponseEntity.ok(price);
+       return  ResponseEntity.ok(price);
     }
 
 }
