@@ -4,6 +4,7 @@ import com.example.tradingsimulator.dto.OrderDto;
 import com.example.tradingsimulator.dto.OrderRequestDto;
 import com.example.tradingsimulator.dto.PriceDto;
 import com.example.tradingsimulator.model.Holding;
+import com.example.tradingsimulator.model.Idempotency;
 import com.example.tradingsimulator.model.Order;
 import com.example.tradingsimulator.repository.HoldingRepository;
 import com.example.tradingsimulator.repository.OrderRepository;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.Optional;
 
 @Service
 public class OrderService {
@@ -21,23 +23,42 @@ public class OrderService {
     private final EmailSenderService emailSenderService;
     private final PriceTickerService priceService;
     private final UserService userService;
+    private final IdempotencyService idempotencyService;
 
     public OrderService(OrderRepository orderRepository,
                         UserService userService ,
                         HoldingRepository holdingRepository,
                         EmailSenderService emailSenderService,
-                        PriceTickerService priceService) {
+                        PriceTickerService priceService,
+                        IdempotencyService idempotencyService) {
         this.orderRepository = orderRepository;
         this.userService = userService;
         this.holdingRepository = holdingRepository;
         this.priceService = priceService;
         this.emailSenderService = emailSenderService;
+        this.idempotencyService = idempotencyService;
     }
 
     @Transactional
-    public OrderDto placeOrder(OrderRequestDto request) {
-            PriceDto priceDto = priceService.getPrice(request.ticker());
-            BigDecimal totalCost = priceDto.price().multiply(request.quantity());
+    public OrderDto placeOrder(OrderRequestDto request, String idempotencyKey) {
+        Optional<Idempotency> existing = idempotencyService.findById(idempotencyKey);
+        if (existing.isPresent()) {
+            Order order = orderRepository.findById(existing.get().getOrderId())
+                    .orElseThrow(() -> new RuntimeException("Order not found for idempotency key"));
+            return new OrderDto(
+                    order.getId(),
+                    order.getUserId(),
+                    order.getTicker(),
+                    order.getQuantity(),
+                    order.getOrderType(),
+                    order.getExecutionType(),
+                    order.getStatus(),
+                    order.getTimestamp()
+            );
+        }
+
+        PriceDto priceDto = priceService.getPrice(request.ticker());
+        BigDecimal totalCost = priceDto.price().multiply(request.quantity());
 
         switch (request.orderType()) {
             case BUY -> buyOrder(request, totalCost);
@@ -56,6 +77,8 @@ public class OrderService {
         );
 
         Order savedOrder = orderRepository.save(order);
+
+        idempotencyService.save(idempotencyKey, savedOrder.getId());
 
         return new OrderDto(
                 savedOrder.getId(),

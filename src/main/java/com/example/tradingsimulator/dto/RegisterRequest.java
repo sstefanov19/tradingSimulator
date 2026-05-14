@@ -1,11 +1,8 @@
 package com.example.tradingsimulator.dto;
 
-import com.example.tradingsimulator.model.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-
-import java.math.BigDecimal;
 
 public record RegisterRequest(
         @NotBlank(message = "Email is required")
@@ -19,7 +16,5 @@ public record RegisterRequest(
 
         @NotBlank(message = "Password is required")
         @Size(min = 3, message = "Password must be at least 3 characters")
-        String password,
-
-        Role role
+        String password
 ) {}

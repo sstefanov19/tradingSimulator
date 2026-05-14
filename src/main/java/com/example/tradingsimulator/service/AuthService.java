@@ -4,12 +4,14 @@ import com.example.tradingsimulator.dto.LoginRequest;
 import com.example.tradingsimulator.dto.RefreshTokenRequest;
 import com.example.tradingsimulator.dto.RegisterRequest;
 import com.example.tradingsimulator.dto.TokenPair;
+import com.example.tradingsimulator.model.Role;
 import com.example.tradingsimulator.model.User;
 import com.example.tradingsimulator.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class AuthService {
@@ -43,7 +46,7 @@ public class AuthService {
                 .email(registerRequest.email())
                 .username(registerRequest.username())
                 .password(passwordEncoder.encode(registerRequest.password()))
-                .role(registerRequest.role())
+                .role(Role.ROLE_USER)
                 .balance(BigDecimal.ZERO)
                 .build();
 
