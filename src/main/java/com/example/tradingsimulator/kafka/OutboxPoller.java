@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 import java.util.List;
 
@@ -22,7 +24,16 @@ public class OutboxPoller {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    @Scheduled(fixedDelay = 500)
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    public void onOutboxPending(OutboxPendingEvent event) {
+        poll();
+    }
+
+    @Scheduled(fixedDelay = 30_000)
+    public void pollFallback() {
+        poll();
+    }
+
     public void poll() {
         List<UserTransaction> pending = userTransactionRepository.findByStatus("PENDING");
         for (UserTransaction tx : pending) {

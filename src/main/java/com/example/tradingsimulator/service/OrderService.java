@@ -1,11 +1,13 @@
 package com.example.tradingsimulator.service;
 
 import com.example.tradingsimulator.dto.OrderRequestDto;
+import com.example.tradingsimulator.kafka.OutboxPendingEvent;
 import com.example.tradingsimulator.model.Idempotency;
 import com.example.tradingsimulator.model.Order;
 import com.example.tradingsimulator.model.UserTransaction;
 import com.example.tradingsimulator.repository.OrderRepository;
 import com.example.tradingsimulator.repository.UserTransactionRepository;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,13 +21,16 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final UserTransactionRepository userTransactionRepository;
     private final IdempotencyService idempotencyService;
+    private final ApplicationEventPublisher eventPublisher;
 
     public OrderService(OrderRepository orderRepository,
                         UserTransactionRepository userTransactionRepository,
-                        IdempotencyService idempotencyService) {
+                        IdempotencyService idempotencyService,
+                        ApplicationEventPublisher eventPublisher) {
         this.orderRepository = orderRepository;
         this.userTransactionRepository = userTransactionRepository;
         this.idempotencyService = idempotencyService;
+        this.eventPublisher = eventPublisher;
     }
 
     @Transactional
@@ -45,6 +50,8 @@ public class OrderService {
                 saved.getId(), request.userId(), request.ticker(),
                 request.quantity(), request.orderType(), idempotencyKey, saved.getTimestamp()
         ));
+
+        eventPublisher.publishEvent(new OutboxPendingEvent());
 
         return saved.getId();
     }
