@@ -6,20 +6,26 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "idempotency")
-public class Idempotency {
+public class Idempotency extends Object {
 
     @Id
     private String id;
-    
+
     private Long orderId;
 
-    public Idempotency() {}
+    public Idempotency() {
+    }
 
     public Idempotency(String id, Long orderId) {
         this.id = id;
         this.orderId = orderId;
     }
 
-    public String getId() { return id; }
-    public Long getOrderId() { return orderId; }
+    public String getId() {
+        return id;
+    }
+
+    public Long getOrderId() {
+        return orderId;
+    }
 }
