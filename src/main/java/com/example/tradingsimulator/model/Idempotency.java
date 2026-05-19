@@ -10,7 +10,7 @@ public class Idempotency {
 
     @Id
     private String id;
-
+    
     private Long orderId;
 
     public Idempotency() {}

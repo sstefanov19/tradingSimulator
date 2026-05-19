@@ -7,7 +7,7 @@ import lombok.Setter;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name= "holdings")
+@Table(name = "holdings")
 @Getter
 @Setter
 public class Holding {
@@ -18,14 +18,18 @@ public class Holding {
 
     private Long userId;
 
+    private String username;
+
     private String ticker;
 
     private BigDecimal quantity;
 
-    public Holding() {}
+    public Holding() {
+    }
 
-    public Holding(Long userId, String ticker, BigDecimal quantity) {
+    public Holding(Long userId, String username, String ticker, BigDecimal quantity) {
         this.userId = userId;
+        this.username = username;
         this.ticker = ticker;
         this.quantity = quantity;
     }

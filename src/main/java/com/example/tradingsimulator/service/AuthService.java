@@ -32,7 +32,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
 
     private final AuthenticationManager authenticationManager;
-    private final EmailSenderService emailSenderService;
+
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
 
@@ -50,10 +50,6 @@ public class AuthService {
                 .balance(BigDecimal.ZERO)
                 .build();
 
-        emailSenderService.sendEmail(user.getEmail(), "Register User" ,
-                "Thank you for your trust to sign up for TradingSimulator.Where you can explore" +
-                        "the world of the stock market." +
-                        "Happy scrolling!");
         userRepository.save(user);
     }
 

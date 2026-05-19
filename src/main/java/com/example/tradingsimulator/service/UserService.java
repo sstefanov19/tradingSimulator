@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 
 @Service
-public class UserService{
+public class UserService {
 
     private final UserRepository userRepository;
 
@@ -15,19 +15,11 @@ public class UserService{
         this.userRepository = userRepository;
     }
 
-    public BigDecimal getBalance(Long userId) {
-        User user = userRepository.findById(userId)
+    public void decreaseBalance(Long userId, BigDecimal amount) {
+        User user = userRepository.findByIdWithLock(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found!"));
-
-        return user.getBalance();
-    }
-
-    public void decreaseBalance(Long userId , BigDecimal amount) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found!"));
-
         BigDecimal newBalance = user.getBalance().subtract(amount);
-        if(newBalance.compareTo(BigDecimal.ZERO)< 0) {
+        if (newBalance.compareTo(BigDecimal.ZERO) < 0) {
             throw new RuntimeException("Insufficient balance!");
         }
 
@@ -36,7 +28,7 @@ public class UserService{
     }
 
     public BigDecimal increaseBalance(Long userId, BigDecimal amount) {
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByIdWithLock(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         BigDecimal newBalance = user.getBalance().add(amount);
@@ -50,5 +42,17 @@ public class UserService{
                 .orElseThrow(() -> new RuntimeException("User not found!"));
 
         return user.getEmail();
+    }
+
+    public String getUsername(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found!"))
+                .getUsername();
+    }
+
+    public BigDecimal getBalance(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found!"))
+                .getBalance();
     }
 }

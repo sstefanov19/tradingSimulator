@@ -60,23 +60,23 @@ public class PriceTickerServiceTest {
         assertNull(cache.get(ticker));
 
         PriceDto firstCall = priceTickerService.getPrice(ticker);
-        assertEquals(mockedPrice.getPrice(), firstCall.getPrice());
+        assertEquals(mockedPrice.price(), firstCall.price());
         verify(alphaVantageClient, times(1)).getPriceForTicker(ticker);
 
         // Verify the result is now cached
         Cache.ValueWrapper cachedValue = cache.get(ticker);
         assertNotNull(cachedValue);
         PriceDto cachedPrice = (PriceDto) cachedValue.get();
-        assertEquals(mockedPrice.getPrice(), cachedPrice.getPrice());
+        assertEquals(mockedPrice.price(), cachedPrice.price());
 
         // Second call - should use cached result, no additional service call
         PriceDto secondCall = priceTickerService.getPrice(ticker);
-        assertEquals(mockedPrice.getPrice(), secondCall.getPrice());
+        assertEquals(mockedPrice.price(), secondCall.price());
         verify(alphaVantageClient, times(1)).getPriceForTicker(ticker); // Still only 1 call
 
         // Third call - should still use cached result
         PriceDto thirdCall = priceTickerService.getPrice(ticker);
-        assertEquals(mockedPrice.getPrice(), thirdCall.getPrice());
+        assertEquals(mockedPrice.price(), thirdCall.price());
         verify(alphaVantageClient, times(1)).getPriceForTicker(ticker); // Still only 1 call
     }
 

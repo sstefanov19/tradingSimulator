@@ -25,30 +25,26 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc(addFilters = false)
 public class OrderControllerIntegrationTest {
 
-    @Autowired private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-    @Autowired private ObjectMapper objectMapper;
+    @Autowired
+    private ObjectMapper objectMapper;
     @MockBean
     private UserService userService;
 
     @BeforeEach
     void setUp() {
-
-        Mockito.when(userService.getBalance("9999")).thenReturn(new BigDecimal(600000));
-        Mockito.when(userService.findEmail("9999")).thenReturn("test@exmample.com");
+        Mockito.when(userService.findEmail(9999L)).thenReturn("test@exmample.com");
     }
 
     @Test
     void placeOrder_shouldReturn200_whenValid() throws Exception {
-        OrderRequestDto request = new OrderRequestDto();
-        request.setUserId("9999");
-        request.setTicker("AAPL");
-        request.setOrderType(OrderType.BUY);
-        request.setQuantity(new BigDecimal("1"));
+        OrderRequestDto request = new OrderRequestDto(9999L, "AAPL", new BigDecimal("1"), OrderType.BUY);
 
         mockMvc.perform(post("/api/v1/orders")
-                        .contentType(String.valueOf(MediaType.APPLICATION_JSON))
-                        .content(objectMapper.writeValueAsString(request)))
+                .contentType(String.valueOf(MediaType.APPLICATION_JSON))
+                .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk());
     }
 }

@@ -1,10 +1,11 @@
 package com.example.tradingsimulator.controller;
 
-import com.example.tradingsimulator.model.Holding;
-import com.example.tradingsimulator.repository.HoldingRepository;
+import com.example.tradingsimulator.dto.HoldingResponse;
+import com.example.tradingsimulator.service.HoldingService;
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,16 +15,16 @@ import java.util.List;
 @RequestMapping("/api/v1")
 public class HoldingController {
 
-    private final HoldingRepository holdingRepository;
+    private final HoldingService holdingService;
 
-    public HoldingController(HoldingRepository holdingRepository) {
-        this.holdingRepository = holdingRepository;
+    public HoldingController(HoldingService holdingService) {
+        this.holdingService = holdingService;
     }
 
-
-    @GetMapping("/holdings/{userId}")
-    public ResponseEntity<List<Holding>> getHoldings(@PathVariable String userId) {
-        List<Holding> holdings = holdingRepository.findByUserId(Long.parseLong(userId));
+    @GetMapping("/holdings/me")
+    public ResponseEntity<List<HoldingResponse>> getHoldings(Authentication authentication) {
+        String username = authentication.getName();
+        List<HoldingResponse> holdings = holdingService.getHoldingsByUsername(username);
 
         return ResponseEntity.ok(holdings);
     }

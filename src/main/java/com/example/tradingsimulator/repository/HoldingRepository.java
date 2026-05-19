@@ -10,5 +10,5 @@ public interface HoldingRepository extends JpaRepository<Holding, Long> {
 
     Optional<Holding> findByUserIdAndTicker(Long userId, String ticker);
 
-    List<Holding> findByUserId(Long userId);
+    Optional<List<Holding>> findByUsername(String username);
 }
