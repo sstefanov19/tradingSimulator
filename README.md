@@ -51,7 +51,7 @@ A RESTful crypto trading simulation API built with Spring Boot. Orders are proce
 
 ## Architecture
 
-![alt text](image.png)
+![alt text](architecture/image.png)
 
 
 **Order flow:**
