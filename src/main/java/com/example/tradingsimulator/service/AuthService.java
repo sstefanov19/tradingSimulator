@@ -54,7 +54,6 @@ public class AuthService {
     }
 
     public TokenPair login(LoginRequest loginRequest) {
-        // Authenticate
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginRequest.username(),
@@ -63,8 +62,12 @@ public class AuthService {
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return jwtService.generateTokenPair(authentication);
+        Long userId = userRepository.findByUsername(loginRequest.username())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"))
+                .getId();
 
+        TokenPair pair = jwtService.generateTokenPair(authentication);
+        return new TokenPair(pair.accessToken(), pair.refreshToken(), userId);
     }
 
     public TokenPair refreshToken(@Valid RefreshTokenRequest request) {
@@ -88,7 +91,10 @@ public class AuthService {
         );
 
         String accessToken = jwtService.generateAccessToken(authentication);
-        return new TokenPair(accessToken, refreshToken);
+        Long userId = userRepository.findByUsername(user)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"))
+                .getId();
+        return new TokenPair(accessToken, refreshToken, userId);
 
     }
 }

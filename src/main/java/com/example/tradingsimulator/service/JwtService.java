@@ -35,7 +35,7 @@ public class JwtService {
         String accessToken = generateAccessToken(authentication);
         String refreshToken = generateRefreshToken(authentication);
 
-        return new TokenPair(accessToken , refreshToken);
+        return new TokenPair(accessToken, refreshToken, null);
     }
 
     public String generateAccessToken(Authentication authentication ) {
