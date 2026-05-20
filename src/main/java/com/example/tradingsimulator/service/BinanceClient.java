@@ -1,6 +1,8 @@
 package com.example.tradingsimulator.service;
 
 import com.example.tradingsimulator.dto.PriceDto;
+import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
+import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -15,25 +17,35 @@ public class BinanceClient {
 
     private final RestTemplate restTemplate;
     private final String baseUrl;
+    private final CircuitBreaker circuitBreaker;
 
     public BinanceClient(
             RestTemplate restTemplate,
-            @Value("${binance.base.url}") String baseUrl) {
+            @Value("${binance.base.url}") String baseUrl,
+            CircuitBreaker binanceCircuitBreaker) {
         this.restTemplate = restTemplate;
         this.baseUrl = baseUrl;
+        this.circuitBreaker = binanceCircuitBreaker;
     }
 
     public PriceDto getPriceForTicker(String ticker) {
         String symbol = ticker.toUpperCase() + "USDT";
         String url = String.format("%s/api/v3/ticker/price?symbol=%s", baseUrl, symbol);
+        try {
+            return circuitBreaker.executeSupplier(() -> fetchPrice(ticker, url));
+        } catch (CallNotPermittedException e) {
+            log.warn("Circuit breaker OPEN — Binance unavailable for ticker {}", ticker);
+            throw new RuntimeException("Binance price service is currently unavailable. Please try again later.");
+        }
+    }
 
+    @SuppressWarnings("unchecked")
+    private PriceDto fetchPrice(String ticker, String url) {
         Map<String, Object> response = restTemplate.getForObject(url, Map.class);
-
         if (response == null || !response.containsKey("price")) {
             log.warn("No Binance data for ticker {}, response: {}", ticker, response);
             throw new RuntimeException("No data found for ticker: " + ticker);
         }
-
         String priceStr = (String) response.get("price");
         return new PriceDto(ticker, new BigDecimal(priceStr));
     }
