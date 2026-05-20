@@ -1,7 +1,7 @@
 package com.example.tradingsimulator.config;
 
 import com.example.tradingsimulator.dto.PriceDto;
-import com.example.tradingsimulator.service.AlphaVantageClient;
+import com.example.tradingsimulator.service.BinanceClient;
 import com.example.tradingsimulator.service.TickerTracker;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.CacheManager;
@@ -11,12 +11,12 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class PriceRefreshConfig {
-    private final AlphaVantageClient alphaVantageClient;
+    private final BinanceClient binanceClient;
     private final CacheManager cacheManager;
     private final TickerTracker tickerTracker;
 
-    public PriceRefreshConfig(AlphaVantageClient alphaVantageClient, CacheManager cacheManager, TickerTracker tickerTracker) {
-        this.alphaVantageClient = alphaVantageClient;
+    public PriceRefreshConfig(BinanceClient binanceClient, CacheManager cacheManager, TickerTracker tickerTracker) {
+        this.binanceClient = binanceClient;
         this.cacheManager = cacheManager;
         this.tickerTracker = tickerTracker;
     }
@@ -25,7 +25,7 @@ public class PriceRefreshConfig {
     public void refreshCachedPrice() {
         for (String ticker : tickerTracker.getRequestedTickers()) {
             try {
-                PriceDto price = alphaVantageClient.getPriceForTicker(ticker);
+                PriceDto price = binanceClient.getPriceForTicker(ticker);
                 if (price != null && price.price() != null) {
                     var cache = cacheManager.getCache("CACHE_PRICE");
                     if (cache != null) {

@@ -1,13 +1,15 @@
 import http from 'k6/http';
-import { check, sleep } from 'k6';
+import { check } from 'k6';
+import { uuidv4 } from 'https://jslib.k6.io/k6-utils/1.4.0/index.js';
 
 const BASE_URL = 'http://localhost:8080';
+const RUN_ID = uuidv4();
 
 export const options = {
     stages: [
-        { duration: '10s', target: 10 },  // ramp up to 10 users
-        { duration: '30s', target: 30 },  // ramp up to 50 (beyond thread pool)
-        { duration: '10s', target: 0 },   // ramp down
+        { duration: '4s', target: 10 },   // ramp up to 10 users
+        { duration: '12s', target: 30 },  // ramp up to 50 (beyond thread pool)
+        { duration: '4s', target: 0 },    // ramp down
     ],
     thresholds: {
         http_req_failed: ['rate<0.01'],       // less than 1% errors
@@ -34,13 +36,13 @@ export default function (data) {
     const headers = {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${data.accessToken}`,
-        'Idempotency-Key': `key-${__VU}-${__ITER}`,
+        'Idempotency-Key': `${RUN_ID}-${__VU}-${__ITER}`,
     };
 
     const payload = JSON.stringify({
         userId: 1,
-        ticker: 'AAPL',
-        quantity: 1,
+        ticker: 'BTC',
+        quantity: 0.1,
         orderType: 'BUY',
     });
 
@@ -64,7 +66,7 @@ export function idempotencyTest(data) {
 
     const payload = JSON.stringify({
         userId: 1,
-        ticker: 'AAPL',
+        ticker: 'BTC',
         quantity: 1,
         orderType: 'BUY',
     });

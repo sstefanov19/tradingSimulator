@@ -1,7 +1,7 @@
 package com.example.tradingsimulator;
 
 import com.example.tradingsimulator.dto.PriceDto;
-import com.example.tradingsimulator.service.AlphaVantageClient;
+import com.example.tradingsimulator.service.BinanceClient;
 import com.example.tradingsimulator.service.PriceTickerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,12 +36,12 @@ public class PriceTickerServiceTest {
 
     @BeforeEach
     void setUp() {
-        reset(alphaVantageClient);
+        reset(binanceClient);
         cacheManager.getCache("PRICE_CACHE").clear();
     }
 
     @MockBean
-    private AlphaVantageClient alphaVantageClient;
+    private BinanceClient binanceClient;
 
     @Autowired
     private PriceTickerService priceTickerService;
@@ -55,13 +55,13 @@ public class PriceTickerServiceTest {
         PriceDto mockedPrice = new PriceDto(ticker, new BigDecimal("123.45"));
         Cache cache = cacheManager.getCache("PRICE_CACHE");
 
-        when(alphaVantageClient.getPriceForTicker(ticker)).thenReturn(mockedPrice);
+        when(binanceClient.getPriceForTicker(ticker)).thenReturn(mockedPrice);
 
         assertNull(cache.get(ticker));
 
         PriceDto firstCall = priceTickerService.getPrice(ticker);
         assertEquals(mockedPrice.price(), firstCall.price());
-        verify(alphaVantageClient, times(1)).getPriceForTicker(ticker);
+        verify(binanceClient, times(1)).getPriceForTicker(ticker);
 
         // Verify the result is now cached
         Cache.ValueWrapper cachedValue = cache.get(ticker);
@@ -72,12 +72,12 @@ public class PriceTickerServiceTest {
         // Second call - should use cached result, no additional service call
         PriceDto secondCall = priceTickerService.getPrice(ticker);
         assertEquals(mockedPrice.price(), secondCall.price());
-        verify(alphaVantageClient, times(1)).getPriceForTicker(ticker); // Still only 1 call
+        verify(binanceClient, times(1)).getPriceForTicker(ticker); // Still only 1 call
 
         // Third call - should still use cached result
         PriceDto thirdCall = priceTickerService.getPrice(ticker);
         assertEquals(mockedPrice.price(), thirdCall.price());
-        verify(alphaVantageClient, times(1)).getPriceForTicker(ticker); // Still only 1 call
+        verify(binanceClient, times(1)).getPriceForTicker(ticker); // Still only 1 call
     }
 
     @Test
@@ -87,8 +87,8 @@ public class PriceTickerServiceTest {
         PriceDto applePrice = new PriceDto(ticker1, new BigDecimal("123.45"));
         PriceDto googlePrice = new PriceDto(ticker2, new BigDecimal("2500.00"));
 
-        when(alphaVantageClient.getPriceForTicker(ticker1)).thenReturn(applePrice);
-        when(alphaVantageClient.getPriceForTicker(ticker2)).thenReturn(googlePrice);
+        when(binanceClient.getPriceForTicker(ticker1)).thenReturn(applePrice);
+        when(binanceClient.getPriceForTicker(ticker2)).thenReturn(googlePrice);
 
         // Call for AAPL
         priceTickerService.getPrice(ticker1);
@@ -99,8 +99,8 @@ public class PriceTickerServiceTest {
         priceTickerService.getPrice(ticker2); // Second call should use cache
 
         // Verify each service was called only once per ticker
-        verify(alphaVantageClient, times(1)).getPriceForTicker(ticker1);
-        verify(alphaVantageClient, times(1)).getPriceForTicker(ticker2);
+        verify(binanceClient, times(1)).getPriceForTicker(ticker1);
+        verify(binanceClient, times(1)).getPriceForTicker(ticker2);
     }
 
     @Test
@@ -109,11 +109,11 @@ public class PriceTickerServiceTest {
         PriceDto mockedPrice = new PriceDto(ticker, new BigDecimal("123.45"));
         Cache cache = cacheManager.getCache("PRICE_CACHE");
 
-        when(alphaVantageClient.getPriceForTicker(ticker)).thenReturn(mockedPrice);
+        when(binanceClient.getPriceForTicker(ticker)).thenReturn(mockedPrice);
 
         // First call - hits service
         priceTickerService.getPrice(ticker);
-        verify(alphaVantageClient, times(1)).getPriceForTicker(ticker);
+        verify(binanceClient, times(1)).getPriceForTicker(ticker);
 
         // Manually evict from cache
         cache.evict(ticker);
@@ -121,6 +121,6 @@ public class PriceTickerServiceTest {
 
         // Next call should hit service again
         priceTickerService.getPrice(ticker);
-        verify(alphaVantageClient, times(2)).getPriceForTicker(ticker);
+        verify(binanceClient, times(2)).getPriceForTicker(ticker);
     }
 }
