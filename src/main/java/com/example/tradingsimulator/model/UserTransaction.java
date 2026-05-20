@@ -30,6 +30,7 @@ public class UserTransaction {
     private String idempotencyKey;
     private Instant timestamp;
     private String status;
+    private Instant claimedAt;
 
     public UserTransaction(Long orderId, Long userId, String ticker,
                            BigDecimal quantity, OrderType orderType,
