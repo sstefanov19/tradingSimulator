@@ -1,24 +1,29 @@
 package com.example.tradingsimulator.config;
 
+import jakarta.annotation.PreDestroy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 @Configuration
 public class AsyncConfig {
 
+    private ExecutorService taskExecutorService;
+
     @Bean(name = "taskExecutor")
-    public Executor taskExecutor() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(20);
-        executor.setMaxPoolSize(50);
-        executor.setQueueCapacity(500);
-        executor.setThreadNamePrefix("outbox-async-");
-        executor.setWaitForTasksToCompleteOnShutdown(true);
-        executor.setAwaitTerminationSeconds(30);
-        executor.initialize();
-        return executor;
+    public ExecutorService taskExecutor() {
+        taskExecutorService = Executors.newVirtualThreadPerTaskExecutor();
+        return taskExecutorService;
+    }
+
+    @PreDestroy
+    public void shutdown() throws InterruptedException {
+        if (taskExecutorService != null) {
+            taskExecutorService.shutdown();
+            taskExecutorService.awaitTermination(30, TimeUnit.SECONDS);
+        }
     }
 }

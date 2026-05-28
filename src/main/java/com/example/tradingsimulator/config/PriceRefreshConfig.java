@@ -8,6 +8,8 @@ import org.springframework.cache.CacheManager;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.Executors;
+
 @Slf4j
 @Component
 public class PriceRefreshConfig {
@@ -23,17 +25,19 @@ public class PriceRefreshConfig {
 
     @Scheduled(fixedRate = 30000)
     public void refreshCachedPrice() {
-        for (String ticker : tickerTracker.getRequestedTickers()) {
-            try {
-                PriceDto price = binanceClient.getPriceForTicker(ticker);
-                if (price != null && price.price() != null) {
-                    var cache = cacheManager.getCache("CACHE_PRICE");
-                    if (cache != null) {
-                        cache.put(ticker, price);
+        try (var exec = Executors.newVirtualThreadPerTaskExecutor()) {
+            for (String ticker : tickerTracker.getRequestedTickers()) {
+                exec.submit(() -> {
+                    try {
+                        PriceDto price = binanceClient.getPriceForTicker(ticker);
+                        if (price != null && price.price() != null) {
+                            var cache = cacheManager.getCache("CACHE_PRICE");
+                            if (cache != null) cache.put(ticker, price);
+                        }
+                    } catch (Exception e) {
+                        log.warn("Failed to refresh price for ticker {}: {}", ticker, e.getMessage());
                     }
-                }
-            } catch (Exception e) {
-                log.warn("Failed to refresh price for ticker {}: {}", ticker, e.getMessage());
+                });
             }
         }
     }
