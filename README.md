@@ -75,6 +75,15 @@ Start Kafka, PostgreSQL, Redis, Prometheus and Grafana:
 docker compose up -d
 ```
 
+### Database schema
+
+The app runs with `spring.jpa.hibernate.ddl-auto=validate`, so the schema must exist before
+boot. After provisioning the database, apply the reservation columns once:
+
+```bash
+psql "$DATABASE_URL" -f src/main/resources/db/reservation.sql
+```
+
 ### Running the application
 
 ```bash

@@ -25,6 +25,8 @@ public class Order {
 
     private BigDecimal totalCost;
 
+    private BigDecimal reservedAmount;
+
     @Enumerated(EnumType.STRING)
     private OrderType orderType;
 

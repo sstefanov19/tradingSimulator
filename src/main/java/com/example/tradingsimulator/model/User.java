@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.math.BigDecimal;
 
@@ -49,6 +50,11 @@ public class User {
 
 
     private BigDecimal balance;
+
+    @Builder.Default
+    @ColumnDefault("0")
+    @Column(nullable = false)
+    private BigDecimal reserved = BigDecimal.ZERO;
 
     public User(String email, String username, String password, Role role )  {
         this.email = email;

@@ -1,5 +1,6 @@
 package com.example.tradingsimulator.service;
 
+import com.example.tradingsimulator.exception.InsufficientFundsException;
 import com.example.tradingsimulator.model.User;
 import com.example.tradingsimulator.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,31 @@ public class UserService {
         }
 
         user.setBalance(newBalance);
+        userRepository.save(user);
+    }
+
+    // Settle a filled BUY: debit the actual cost and free the cash reserved at admission.
+    public void settleBuy(Long userId, BigDecimal actualCost, BigDecimal reservedAmount) {
+        User user = userRepository.findByIdWithLock(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found!"));
+
+        BigDecimal newBalance = user.getBalance().subtract(actualCost);
+        if (newBalance.compareTo(BigDecimal.ZERO) < 0) {
+            throw new InsufficientFundsException(
+                    "Insufficient balance at settlement: actual cost " + actualCost
+                            + " exceeds balance " + user.getBalance());
+        }
+
+        user.setBalance(newBalance);
+        user.setReserved(user.getReserved().subtract(reservedAmount));
+        userRepository.save(user);
+    }
+
+    // Release cash reserved at admission without debiting (order rejected/failed).
+    public void releaseReservation(Long userId, BigDecimal reservedAmount) {
+        User user = userRepository.findByIdWithLock(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found!"));
+        user.setReserved(user.getReserved().subtract(reservedAmount));
         userRepository.save(user);
     }
 
