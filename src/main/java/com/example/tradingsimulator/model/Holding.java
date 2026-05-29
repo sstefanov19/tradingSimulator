@@ -3,6 +3,7 @@ package com.example.tradingsimulator.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.math.BigDecimal;
 
@@ -23,6 +24,10 @@ public class Holding {
     private String ticker;
 
     private BigDecimal quantity;
+
+    @ColumnDefault("0")
+    @Column(nullable = false)
+    private BigDecimal reservedQuantity = BigDecimal.ZERO;
 
     public Holding() {
     }
