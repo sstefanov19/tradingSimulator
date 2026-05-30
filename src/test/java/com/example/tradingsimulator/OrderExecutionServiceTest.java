@@ -2,6 +2,7 @@ package com.example.tradingsimulator;
 
 import com.example.tradingsimulator.dto.PriceDto;
 import com.example.tradingsimulator.exception.InsufficientFundsException;
+import com.example.tradingsimulator.exception.InsufficientHoldingsException;
 import com.example.tradingsimulator.kafka.OrderEvent;
 import com.example.tradingsimulator.model.Holding;
 import com.example.tradingsimulator.model.Order;
@@ -132,6 +133,28 @@ public class OrderExecutionServiceTest {
         assertEquals(0, holdingCaptor.getValue().getQuantity().compareTo(new BigDecimal("3")));
         assertEquals(0, holdingCaptor.getValue().getReservedQuantity().compareTo(BigDecimal.ZERO));
         assertEquals("FILLED", order.getStatus());
+    }
+
+    @Test
+    void executeOrder_sell_whenHoldingsInsufficient_releasesReservedQuantityAndMarksRejected() {
+        Order order = order(OrderType.SELL, null);
+        // Holds 1 share but 2 are reserved-and-being-sold: settlement throws.
+        Holding holding = new Holding(2L, "bob", "AAPL", new BigDecimal("1"));
+        holding.setReservedQuantity(new BigDecimal("2"));
+        when(idempotencyService.findById("idem-1")).thenReturn(Optional.empty());
+        when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
+        when(priceService.getPrice("AAPL")).thenReturn(new PriceDto("AAPL", new BigDecimal("10")));
+        when(userService.getUsername(2L)).thenReturn("bob");
+        when(holdingRepository.findByUserIdAndTicker(2L, "AAPL")).thenReturn(Optional.of(holding));
+
+        // Business rejection on a SELL is terminal and must give the reserved shares back —
+        // this is the same release path the DLT recovery uses, so escrow never leaks.
+        service.executeOrder(event(OrderType.SELL, new BigDecimal("2")));
+
+        assertEquals(0, holding.getReservedQuantity().compareTo(BigDecimal.ZERO));
+        assertEquals("REJECTED", order.getStatus());
+        verify(userService, never()).increaseBalance(any(), any());
+        verify(idempotencyService, never()).save(any(), any());
     }
 
     @Test

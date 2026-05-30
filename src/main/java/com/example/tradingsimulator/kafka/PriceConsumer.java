@@ -24,6 +24,12 @@ public class PriceConsumer {
 
     @KafkaListener(topics = "order", groupId = "price-service")
     public void consume(OrderEvent event) {
+        if (event == null) {
+            // ErrorHandlingDeserializer yields a null payload on a malformed message.
+            // The order group's error handler dead-letters it; nothing to snapshot here.
+            log.warn("PriceConsumer received unparseable order event, skipping snapshot");
+            return;
+        }
         log.info("PriceConsumer snapshotting price for order: {}", event.orderId());
         try {
             PriceDto priceDto = priceTickerService.getPrice(event.ticker());

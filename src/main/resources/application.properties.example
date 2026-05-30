@@ -15,3 +15,19 @@ spring.jpa.properties.hibernate.format_sql=true
 app.jwt.secret=YOUR_SECRET_KEY
 app.jwt.expiration=3600000
 app.jwt.refresh-expiration=86400000
+
+# Kafka
+spring.kafka.bootstrap-servers=localhost:9092
+spring.kafka.producer.key-serializer=org.apache.kafka.common.serialization.StringSerializer
+spring.kafka.producer.value-serializer=org.springframework.kafka.support.serializer.JsonSerializer
+# Consumer deserializers are wrapped in ErrorHandlingDeserializer so a malformed payload
+# surfaces as a DeserializationException (routed to order.DLT by the DefaultErrorHandler)
+# instead of looping forever inside the deserializer.
+spring.kafka.consumer.key-deserializer=org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+spring.kafka.consumer.value-deserializer=org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+spring.kafka.consumer.properties.spring.deserializer.key.delegate.class=org.apache.kafka.common.serialization.StringDeserializer
+spring.kafka.consumer.properties.spring.deserializer.value.delegate.class=org.springframework.kafka.support.serializer.JsonDeserializer
+spring.kafka.consumer.auto-offset-reset=earliest
+spring.kafka.consumer.properties.spring.json.trusted.packages=com.example.tradingsimulator.kafka
+spring.kafka.consumer.max-poll-records=10
+spring.kafka.listener.idle-between-polls=0

@@ -15,7 +15,8 @@ public class OrderConsumer {
         this.orderExecutionService = orderExecutionService;
     }
 
-    @KafkaListener(topics = "order", groupId = "order-service")
+    @KafkaListener(topics = "order", groupId = "order-service",
+            containerFactory = "orderKafkaListenerContainerFactory")
     public void consume(OrderEvent event) {
         log.info("OrderConsumer processing order: {}", event.orderId());
         orderExecutionService.executeOrder(event);
