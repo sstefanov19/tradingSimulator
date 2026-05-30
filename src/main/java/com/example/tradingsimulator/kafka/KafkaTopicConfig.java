@@ -12,4 +12,12 @@ public class KafkaTopicConfig {
     public NewTopic orderTopic() {
         return TopicBuilder.name("order").partitions(3).replicas(1).build();
     }
+
+    // Mirror the source topic's partition count: DeadLetterPublishingRecoverer's
+    // default resolver publishes a failed record to the SAME partition number on
+    // the DLT, so order.DLT must have at least as many partitions as "order".
+    @Bean
+    public NewTopic orderDltTopic() {
+        return TopicBuilder.name("order.DLT").partitions(3).replicas(1).build();
+    }
 }

@@ -146,7 +146,9 @@ public class OrderExecutionService {
 
     // Release the admission-time reservation and mark the order REJECTED. Runs in its own
     // committed transaction so the outcome survives the rolled-back execution transaction.
-    private void rejectAndRelease(OrderEvent event) {
+    // Public because the Kafka error handler also calls this when a message is dead-lettered
+    // (a DLT'd order is terminal, so it must release escrow exactly like a business rejection).
+    public void rejectAndRelease(OrderEvent event) {
         transactionTemplate.executeWithoutResult(s -> {
             Order order = orderRepository.findById(event.orderId()).orElse(null);
             if (order == null) return;
